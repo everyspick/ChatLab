@@ -1,5 +1,46 @@
 [
   {
+    "version": "0.13.0",
+    "date": "2026-03-16",
+    "summary": "Assistant Mode is here with skills in chat, quick input actions, improved chat and settings UI, Traditional Chinese and Japanese support, UI refinements, and multiple stability fixes.",
+    "changes": [
+      {
+        "type": "feat",
+        "items": [
+          "Shipped the first Assistant Mode release with improved assistant logic and analysis tools",
+          "Launched the Assistant and Skill marketplaces; chats can now use skills",
+          "Added @-mention member selection for collaboration",
+          "Added Traditional Chinese and Japanese localization",
+          "Refactored Settings and refined UI details",
+          "Improved Overview styling and chat experience",
+          "Moved the export chat history entry point",
+          "Removed the legacy prompt system and custom AI filtering",
+          "Model calls no longer stop when switching pages"
+        ]
+      },
+      {
+        "type": "fix",
+        "items": ["Fixed Gemini API configuration issues", "Fixed an error caused by stopword processing order in NLP"]
+      },
+      {
+        "type": "refactor",
+        "items": ["Refactored AIChat organization", "Restructured directory and project layout"]
+      },
+      {
+        "type": "docs",
+        "items": ["Updated the user agreement and project docs"]
+      },
+      {
+        "type": "chore",
+        "items": ["Improved the changelog build pipeline"]
+      },
+      {
+        "type": "style",
+        "items": ["Standardized code formatting and lint output"]
+      }
+    ]
+  },
+  {
     "version": "0.12.1",
     "date": "2026-02-27",
     "summary": "Add chat-history preprocessing and AI debugging, refactor the Agent/LLM architecture, and fix i18n and Windows theme consistency issues.",

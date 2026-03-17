@@ -53,7 +53,9 @@ jobs:
             ${{ runner.os }}-${{ matrix.arch }}-pnpm-store-
 
       - name: Install dependencies
-        run: pnpm install
+        run: |
+          echo "node-linker=hoisted" >> .npmrc
+          pnpm install
 
       # macOS 签名和公证需要的 API Key 文件
       - name: Create Apple API Key File
@@ -118,7 +120,9 @@ jobs:
             ${{ runner.os }}-pnpm-store-
 
       - name: Install dependencies
-        run: pnpm install
+        run: |
+          echo "node-linker=hoisted" >> .npmrc
+          pnpm install
 
       - name: Build Electron app for Windows
         env:
@@ -201,7 +205,7 @@ jobs:
             echo ""
             echo "---"
             echo ""
-            echo "Full Changelog: [English](https://github.com/hellodigua/ChatLab/blob/main/docs/changelogs_en.json) | [中文](https://github.com/hellodigua/ChatLab/blob/main/docs/changelogs_cn.json)"
+            echo "Full Changelog: [English](https://github.com/hellodigua/ChatLab/blob/main/docs/changelogs_en.json) | [中文](https://github.com/hellodigua/ChatLab/blob/main/docs/changelogs_cn.json) | [日本語](https://github.com/hellodigua/ChatLab/blob/main/docs/changelogs_ja.json)"
             echo ""
             echo "---"
             echo ""
