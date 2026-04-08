@@ -1,5 +1,43 @@
 [
   {
+    "version": "0.15.0",
+    "date": "2026-04-08",
+    "summary": "This release significantly improves search and query performance with context-aware search, streamlines AI model configuration with added providers, and adds Linux platform support.",
+    "changes": [
+      {
+        "type": "feat",
+        "items": [
+          "Add query caching to speed up access.",
+          "Enable automatic context carry-over in search tools.",
+          "Refactor the model configuration flow.",
+          "Show a language selection dialog on first launch for new users.",
+          "Add basic debugging tools in the Lab.",
+          "Remove legacy prompts."
+        ]
+      },
+      {
+        "type": "fix",
+        "items": [
+          "Fix inconsistent title bar button background color in Windows light mode.",
+          "Fix CI packaging workflow alignment issues between Node 24 and pnpm.",
+          "Fill in missing i18n translations for tool invocation display names."
+        ]
+      },
+      {
+        "type": "refactor",
+        "items": ["Improve the code organization of the AI configuration modal."]
+      },
+      {
+        "type": "chore",
+        "items": ["Upgrade to Node 24.", "Add Linux packaging support."]
+      },
+      {
+        "type": "docs",
+        "items": ["Update documentation."]
+      }
+    ]
+  },
+  {
     "version": "0.14.2",
     "date": "2026-04-07",
     "summary": "This update improves the AI chat experience with copy support, cleaner UI, new FTS5 full-text search tools, leaner search parameters, and clearer error feedback with stronger test coverage.",

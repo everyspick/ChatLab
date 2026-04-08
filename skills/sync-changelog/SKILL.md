@@ -32,11 +32,13 @@ scripts/preflight_main_clean.sh . "package.json,docs/changelogs_cn.json"
 
 1. 从 `docs/changelogs_cn.json` 读取第一个对象作为当前版本。
 2. 读取版本号 `version`（例如 `0.9.6`）。
-3. 检查以下文件是否存在：
+3. **在开始翻译前，必须重新读取一次该版本的完整中文内容（`summary` 与 `changes`），并以这次读取结果作为唯一翻译源。**
+4. **严禁复用之前由 `generate-changelog` 或任意草稿步骤产出的缓存文案；若用户在生成后手动修改过中文日志，必须以用户修改后的文件内容为准。**
+5. 检查以下文件是否存在：
    - `docs/changelogs_en.json`
    - `docs/changelogs_tw.json`
    - `docs/changelogs_ja.json`
-4. 任一目标文件不存在都立即退出，不允许自动创建。
+6. 任一目标文件不存在都立即退出，不允许自动创建。
 
 ## 3. 生成多语言 changelog（AI 翻译）
 
@@ -55,7 +57,8 @@ scripts/preflight_main_clean.sh . "package.json,docs/changelogs_cn.json"
 4. 每个目标文件都遵循相同规则：
    - 若已存在该版本，替换该版本对象。
    - 若不存在，插入到数组首位。
-5. 写入后执行格式化（若项目有 Prettier，优先使用 Prettier）。
+5. 翻译时必须逐条对应当前中文条目：`summary` 与 `changes.items` 的语义都应来自最新中文文件内容，不得沿用旧版本措辞。
+6. 写入后执行格式化（若项目有 Prettier，优先使用 Prettier）。
 
 ## 4. 在当前仓库创建发布提交
 
