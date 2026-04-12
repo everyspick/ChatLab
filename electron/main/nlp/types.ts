@@ -78,6 +78,8 @@ export interface WordFrequencyParams {
   enableStopwords?: boolean
   /** 词库类型：default=内置简体中文, zh-TW=繁体中文 */
   dictType?: DictType
+  /** 要排除的词语列表（词云过滤方案） */
+  excludeWords?: string[]
 }
 
 /** 词性标签信息 */

@@ -386,7 +386,7 @@ function getSessionAvatar(session: AnalysisSession): string | null {
     </UModal>
 
     <!-- Delete Confirmation Modal -->
-    <UModal v-model:open="showDeleteModal">
+    <UModal v-model:open="showDeleteModal" :ui="{ content: 'z-50' }">
       <template #content>
         <div class="p-4">
           <h3 class="mb-3 font-semibold text-gray-900 dark:text-white">{{ t('layout.deleteModal.title') }}</h3>

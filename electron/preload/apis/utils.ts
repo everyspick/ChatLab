@@ -35,6 +35,10 @@ export interface WordFrequencyParams {
   customPosTags?: string[]
   /** 是否启用停用词过滤，默认 true */
   enableStopwords?: boolean
+  /** 词库类型 */
+  dictType?: string
+  /** 要排除的词语列表（词云过滤方案） */
+  excludeWords?: string[]
 }
 
 export interface PosTagInfo {

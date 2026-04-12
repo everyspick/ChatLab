@@ -24,6 +24,7 @@ export function getWordFrequency(params: WordFrequencyParams): WordFrequencyResu
     customPosTags,
     enableStopwords = true,
     dictType = 'default',
+    excludeWords,
   } = params
 
   const db = openDatabase(sessionId)
@@ -87,6 +88,7 @@ export function getWordFrequency(params: WordFrequencyParams): WordFrequencyResu
     customPosTags,
     enableStopwords,
     dictType: dictType as DictType,
+    excludeWords,
   })
 
   let totalWords = 0

@@ -5,13 +5,16 @@ const EChartWordcloud = defineAsyncComponent(() => import('@/components/charts/E
 import type { EChartWordcloudData } from '@/components/charts'
 import { LoadingState, EmptyState, UITabs } from '@/components/UI'
 import UserSelect from '@/components/common/UserSelect.vue'
+import WordFilterModal from '@/components/common/WordFilterModal.vue'
 import { useSettingsStore } from '@/stores/settings'
 import { useLayoutStore } from '@/stores/layout'
+import { useWordFilterStore } from '@/stores/wordFilter'
 import { useToast } from '@/composables/useToast'
 
 const { t } = useI18n()
 const settingsStore = useSettingsStore()
 const layoutStore = useLayoutStore()
+const wordFilterStore = useWordFilterStore()
 const toast = useToast()
 
 interface TimeFilter {
@@ -69,6 +72,29 @@ const posTagStats = ref<Map<string, number>>(new Map())
 
 // 用户筛选（本地状态，覆盖 props.memberId）
 const selectedMemberId = ref<number | null>(null)
+
+// 过滤方案
+const activeFilterSchemeId = computed({
+  get: () => wordFilterStore.getActiveSchemeId(props.sessionId),
+  set: (v) => wordFilterStore.setSessionScheme(props.sessionId, v),
+})
+
+const filterSchemeOptions = computed(() => [
+  { label: t('wordFilter.noFilter'), value: '__none__' },
+  ...wordFilterStore.schemeOptions.map((s) => ({
+    label: s.isDefault ? `${s.label} ★` : s.label,
+    value: s.value,
+  })),
+])
+
+const filterSchemeSelectValue = computed({
+  get: () => activeFilterSchemeId.value ?? '__none__',
+  set: (v) => {
+    activeFilterSchemeId.value = v === '__none__' ? null : v
+  },
+})
+
+const currentExcludeWords = computed(() => wordFilterStore.getExcludeWords(props.sessionId))
 
 // 获取当前语言设置
 // ==================== 词库切换 ====================
@@ -220,6 +246,7 @@ async function loadWordFrequency() {
       customPosTags: posFilterMode.value === 'custom' ? [...customPosTags.value] : undefined,
       enableStopwords: enableStopwords.value,
       dictType: selectedDictType.value,
+      excludeWords: currentExcludeWords.value.length > 0 ? [...currentExcludeWords.value] : undefined,
     })
 
     wordcloudData.value = {
@@ -262,6 +289,7 @@ watch(
     posFilterMode.value,
     enableStopwords.value,
     selectedDictType.value,
+    currentExcludeWords.value,
   ],
   () => {
     loadWordFrequency()
@@ -514,6 +542,30 @@ onMounted(async () => {
             </UBadge>
           </div>
         </div>
+
+        <!-- 关键词过滤 -->
+        <div>
+          <div class="mb-2 flex items-center justify-between">
+            <h4 class="text-xs font-medium text-gray-600 dark:text-gray-400">
+              {{ t('wordFilter.filterScheme') }}
+            </h4>
+            <UButton
+              size="xs"
+              variant="ghost"
+              color="neutral"
+              icon="i-heroicons-cog-6-tooth"
+              :aria-label="t('wordFilter.manage')"
+              @click="wordFilterStore.openModal()"
+            />
+          </div>
+          <UITabs v-model="filterSchemeSelectValue" size="xs" :items="filterSchemeOptions" />
+          <p
+            v-if="currentExcludeWords.length > 0"
+            class="mt-1 text-xs text-gray-400 dark:text-gray-500"
+          >
+            {{ t('wordFilter.activeCount', { count: currentExcludeWords.length }) }}
+          </p>
+        </div>
       </div>
     </div>
 
@@ -535,5 +587,8 @@ onMounted(async () => {
         </div>
       </template>
     </UModal>
+
+    <!-- 过滤方案管理弹窗 -->
+    <WordFilterModal />
   </div>
 </template>

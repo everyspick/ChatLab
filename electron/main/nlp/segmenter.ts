@@ -361,6 +361,8 @@ export function segment(text: string, locale: SupportedLocale, options: SegmentO
 export interface BatchSegmentOptions extends SegmentOptions {
   minCount?: number
   topN?: number
+  /** 要排除的词语列表 */
+  excludeWords?: string[]
 }
 
 /**
@@ -375,12 +377,14 @@ export function batchSegmentWithFrequency(
   locale: SupportedLocale,
   options: BatchSegmentOptions = {}
 ): Map<string, number> {
-  const { minLength, minCount = 2, topN = 100, posFilterMode, customPosTags, enableStopwords, dictType } = options
+  const { minLength, minCount = 2, topN = 100, posFilterMode, customPosTags, enableStopwords, dictType, excludeWords } = options
   const wordFrequency = new Map<string, number>()
+  const excludeSet = excludeWords?.length ? new Set(excludeWords.map((w) => w.toLowerCase())) : null
 
   for (const text of texts) {
     const words = segment(text, locale, { minLength, posFilterMode, customPosTags, enableStopwords, dictType })
     for (const word of words) {
+      if (excludeSet && excludeSet.has(word.toLowerCase())) continue
       wordFrequency.set(word, (wordFrequency.get(word) || 0) + 1)
     }
   }

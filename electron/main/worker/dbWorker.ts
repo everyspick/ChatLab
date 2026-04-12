@@ -129,8 +129,12 @@ function buildAnalysisCacheKey(type: string, payload: any): string {
   if (payload.locale) parts.push(`l${payload.locale}`)
   if (payload.topN) parts.push(`n${payload.topN}`)
   if (payload.minLength) parts.push(`ml${payload.minLength}`)
+  if (payload.posFilterMode) parts.push(`pfm${payload.posFilterMode}`)
+  if (payload.customPosTags?.length) parts.push(`cpt${JSON.stringify(payload.customPosTags)}`)
   if (payload.posTags) parts.push(`pt${JSON.stringify(payload.posTags)}`)
+  if (payload.enableStopwords === false) parts.push('sw0')
   if (payload.dictType && payload.dictType !== 'default') parts.push(`dt${payload.dictType}`)
+  if (payload.excludeWords?.length) parts.push(`ew${JSON.stringify(payload.excludeWords)}`)
   return parts.join(':')
 }
 
