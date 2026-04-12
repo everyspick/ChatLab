@@ -32,7 +32,7 @@ const variantClasses: Record<string, string> = {
 }
 
 const containerClass = computed(() => {
-  const base = `relative overflow-hidden ${variantClasses[props.variant]}`
+  const base = `relative isolate overflow-hidden ${variantClasses[props.variant]}`
   return props.capturable ? `group/card ${base}` : base
 })
 

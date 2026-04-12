@@ -6,6 +6,7 @@
 import { Worker } from 'worker_threads'
 import { app } from 'electron'
 import * as path from 'path'
+import * as fs from 'fs'
 import type { ParseProgress } from '../parser'
 import type { StreamImportResult } from './import'
 import { openDatabase } from '../database/core'
@@ -55,6 +56,63 @@ function getWorkerPath(): string {
 }
 
 /**
+ * 清空 cache/query/ 下所有 .cache.json 文件
+ */
+function clearAnalysisCacheFiles(queryCacheDir: string): void {
+  if (!fs.existsSync(queryCacheDir)) return
+  const files = fs.readdirSync(queryCacheDir)
+  for (const file of files) {
+    if (file.endsWith('.cache.json')) {
+      fs.unlinkSync(path.join(queryCacheDir, file))
+    }
+  }
+}
+
+/**
+ * 启动时检查是否需要清除分析缓存：
+ * - 开发模式：每次启动都清空（代码随时可能变更，避免旧缓存误导）
+ * - 生产模式：版本号变更时清空（兜底查询逻辑变更导致的缓存过时）
+ */
+function checkAndResetAnalysisCache(): void {
+  const queryCacheDir = path.join(getCacheDir(), 'query')
+  const isDev = !app.isPackaged
+
+  if (isDev) {
+    console.log('[WorkerManager] Dev mode: clearing analysis cache on startup')
+    try {
+      clearAnalysisCacheFiles(queryCacheDir)
+    } catch (err) {
+      console.error('[WorkerManager] Failed to clear analysis cache:', err)
+    }
+    return
+  }
+
+  const versionFile = path.join(queryCacheDir, '.cache_version')
+  const currentVersion = app.getVersion()
+
+  let lastVersion: string | null = null
+  try {
+    if (fs.existsSync(versionFile)) {
+      lastVersion = fs.readFileSync(versionFile, 'utf-8').trim()
+    }
+  } catch {
+    // ignore read errors
+  }
+
+  if (lastVersion === currentVersion) return
+
+  console.log(`[WorkerManager] Version changed (${lastVersion ?? 'none'} → ${currentVersion}), clearing analysis cache`)
+
+  try {
+    clearAnalysisCacheFiles(queryCacheDir)
+    ensureDir(queryCacheDir)
+    fs.writeFileSync(versionFile, currentVersion, 'utf-8')
+  } catch (err) {
+    console.error('[WorkerManager] Failed to reset analysis cache:', err)
+  }
+}
+
+/**
  * 初始化 Worker
  */
 export function initWorker(): void {
@@ -62,6 +120,8 @@ export function initWorker(): void {
     console.log('[WorkerManager] Worker already initialized')
     return
   }
+
+  checkAndResetAnalysisCache()
 
   const workerPath = getWorkerPath()
   console.log('[WorkerManager] Initializing worker at:', workerPath)
