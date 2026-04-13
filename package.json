@@ -12,7 +12,8 @@
     "format": "prettier --write \"src/**/*.{ts,tsx,css,md}\"",
     "type-check": "tsc --noEmit",
     "tauri": "tauri"
-": {
+  },
+  "dependencies": {
     "@tauri-apps/api": "^1.5.1",
     "@uiw/react-markdown-preview": "^5.0.1",
     "ahooks": "^3.7.8",
