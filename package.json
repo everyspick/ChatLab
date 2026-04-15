@@ -9,7 +9,7 @@
     "preview": "vite preview",
     "lint": "eslint src --ext .ts,.tsx --report-unused-disable-directives --max-warnings 0",
     "lint:fix": "eslint src --fix",
-    "format": "prettier --write tsx,css,md}\"",
+    "format": "prettier --write \"src/**/*.{ts,tsx,css,md}\"",
     "type-check": "tsc --noEmit",
     "tauri": "tauri"
   },
@@ -56,7 +56,7 @@
   "prettier": {
     "semi": false,
     "singleQuote": true,
-    "printWidth": 100,
+    "printWidth": 120,
     "trailingComma": "all",
     "tabWidth": 2,
     "bracketSpacing": true,
